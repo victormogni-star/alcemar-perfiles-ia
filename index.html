@@ -45,4 +45,96 @@
     </div>
 
     <script>
+
+       // Variables globales
+        let perfiles = [];
+        let resultados = [];
+
+        // Cargar catálogos de Alcemar
+        function cargarCatalogos() {
+            perfiles = [
+                {codigo: '651', descripcion: 'Umbral y Dintel (Ventana/Puerta corrediza)', peso: 1.21, catalogo: 'Delta'},
+                {codigo: '655', descripcion: 'Jamba (Ventana/Puerta corrediza)', peso: 0.59, catalogo: 'Delta'},
+                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', peso: 1.66, catalogo: 'Complementarios'},
+                {codigo: '174', descripcion: 'Marco PF/VB/VR/VOB/PR/VBDE', peso: 0.74, catalogo: 'Gamma'},
+                {codigo: '481', descripcion: 'Hoja para Ventana y Puerta Corrediza', peso: 0.70, catalogo: 'Gamma'},
+                {codigo: '476', descripcion: 'Pasamanos Redondo para Baranda Clásica', peso: 1.30, catalogo: 'Complementarios'}
+            ];
+            
+            document.getElementById('contador').textContent = perfiles.length;
+            document.getElementById('status').innerHTML = '✅ Catálogos cargados: ' + perfiles.length + ' perfiles';
+        }
+
+        function limpiarBD() {
+            perfiles = [];
+            document.getElementById('contador').textContent = '0';
+            document.getElementById('status').innerHTML = '🔄 Base de datos limpia';
+        }
+
+        // Función de análisis (SIN OpenCV por ahora)
+        function analizarImagen() {
+            const archivo = document.getElementById('imagen').files[0];
+            
+            if (!archivo) {
+                alert('⚠️ Selecciona una imagen primero');
+                return;
+            }
+            
+            if (perfiles.length === 0) {
+                alert('⚠️ Carga los catálogos primero');
+                return;
+            }
+            
+            document.getElementById('status').innerHTML = '🔄 Analizando imagen...';
+            
+            // Simulación de análisis
+            setTimeout(() => {
+                const resultado = simularAnalisis();
+                mostrarResultados([resultado]);
+                document.getElementById('status').innerHTML = '✅ Análisis completado';
+            }, 2000);
+        }
+
+        function demo() {
+            if (perfiles.length === 0) {
+                alert('⚠️ Carga los catálogos primero');
+                return;
+            }
+            
+            const demoDatos = [
+                {codigo: '651', descripcion: 'Umbral y Dintel', cantidad: 12, peso: 1.21, confianza: 0.89},
+                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', cantidad: 8, peso: 1.66, confianza: 0.92}
+            ];
+            
+            mostrarResultados(demoDatos);
+        }
+
+        function simularAnalisis() {
+            const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
+            return {
+                codigo: perfil.codigo,
+                descripcion: perfil.descripcion,
+                cantidad: Math.floor(Math.random() * 20) + 5,
+                peso: perfil.peso,
+                confianza: 0.7 + Math.random() * 0.3
+            };
+        }
+
+        function mostrarResultados(datos) {
+            const contenedor = document.getElementById('lista-resultados');
+            contenedor.innerHTML = datos.map(item => `
+                <div class="result-card">
+                    <h4>Código: ${item.codigo}</h4>
+                    <p><strong>Descripción:</strong> ${item.descripcion}</p>
+                    <p><strong>Cantidad:</strong> ${item.cantidad}</p>
+                    <p><strong>Peso/metro:</strong> ${item.peso} kg</p>
+                    <p><strong>Confianza:</strong> ${(item.confianza * 100).toFixed(1)}%</p>
+                </div>
+            `).join('');
+            
+            document.getElementById('resultados').classList.remove('hidden');
+                 }
+        </script>
+</body>
+</html>
       
