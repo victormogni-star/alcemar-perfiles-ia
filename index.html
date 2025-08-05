@@ -1,9 +1,7 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js"></script>
-    <script>
 <!DOCTYPE html>
 <html lang="es">
 <head>
- <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alcemar Perfiles IA</title>
     <style>
@@ -47,8 +45,7 @@
     </div>
 
     <script>
-
-       // Variables globales
+// Variables globales
         let perfiles = [];
         let resultados = [];
 
@@ -73,84 +70,43 @@
             document.getElementById('status').innerHTML = '🔄 Base de datos limpia';
         }
 
-        // Función de análisis CON OpenCV
-async function analizarImagen() {
-    const archivo = document.getElementById('imagen').files[0];
-    
-    if (!archivo) {
-        alert('⚠️ Selecciona una imagen primero');
-        return;
-    }
-    
-    if (perfiles.length === 0) {
-        alert('⚠️ Carga los catálogos primero');
-        return;
-    }
-    
-    document.getElementById('status').innerHTML = '🔄 Analizando imagen con OpenCV...';
-    
-    // Cargar OpenCV si no está listo
-    if (typeof cv === 'undefined') {
-        document.getElementById('status').innerHTML = '⚠️ OpenCV no cargado, usando análisis simulado';
-        setTimeout(() => {
-            const resultado = simularAnalisis();
-            mostrarResultados([resultado]);
-        }, 1000);
-        return;
-    }
-    
-    // Procesar imagen con OpenCV
-    const img = new Image();
-    img.onload = function() {
-        procesarConOpenCV(img);
-    };
-    img.src = URL.createObjectURL(archivo);
-}
+        // Función de análisis (SIN OpenCV por ahora)
+        function analizarImagen() {
+            const archivo = document.getElementById('imagen').files[0];
+            
+            if (!archivo) {
+                alert('⚠️ Selecciona una imagen primero');
+                return;
+            }
+            
+            if (perfiles.length === 0) {
+                alert('⚠️ Carga los catálogos primero');
+                return;
+            }
+            
+            document.getElementById('status').innerHTML = '🔄 Analizando imagen...';
+            
+            // Simulación de análisis
+            setTimeout(() => {
+                const resultado = simularAnalisis();
+                mostrarResultados([resultado]);
+                document.getElementById('status').innerHTML = '✅ Análisis completado';
+            }, 2000);
+        }
 
-function procesarConOpenCV(imagen) {
-    try {
-        // Crear canvas
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = imagen.width;
-        canvas.height = imagen.height;
-        ctx.drawImage(imagen, 0, 0);
-        
-        // Convertir a OpenCV Mat
-        const src = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        const gray = new cv.Mat();
-        const edges = new cv.Mat();
-        const contours = new cv.MatVector();
-        const hierarchy = new cv.Mat();
-        
-        // Procesar imagen
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.Canny(gray, edges, 50, 150);
-        cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-        
-        console.log(`🔍 OpenCV detectó ${contours.size()} contornos`);
-        
-        // Dibujar contornos verdes
-        dibujarContornos(src, contours);
-        
-        // Analizar formas y matching
-        const formasDetectadas = analizarContornos(contours, canvas.width, canvas.height);
-        const resultados = hacerMatching(formasDetectadas);
-        
-        // Mostrar resultados
-        mostrarResultados(resultados);
-        document.getElementById('status').innerHTML = `✅ OpenCV detectó ${contours.size()} contornos`;
-        
-        // Limpiar memoria
-        src.delete(); gray.delete(); edges.delete(); contours.delete(); hierarchy.delete();
-        
-    } catch (error) {
-        console.error('Error OpenCV:', error);
-        document.getElementById('status').innerHTML = '❌ Error en OpenCV, usando simulación';
-        const resultado = simularAnalisis();
-        mostrarResultados([resultado]);
-    }
-}
+        function demo() {
+            if (perfiles.length === 0) {
+                alert('⚠️ Carga los catálogos primero');
+                return;
+            }
+            
+            const demoDatos = [
+                {codigo: '651', descripcion: 'Umbral y Dintel', cantidad: 12, peso: 1.21, confianza: 0.89},
+                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', cantidad: 8, peso: 1.66, confianza: 0.92}
+            ];
+            
+            mostrarResultados(demoDatos);
+        }
 
         function simularAnalisis() {
             const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
@@ -176,8 +132,9 @@ function procesarConOpenCV(imagen) {
             `).join('');
             
             document.getElementById('resultados').classList.remove('hidden');
-                 }
-        </script>
+
+        }
+
+</script>
 </body>
 </html>
-      
