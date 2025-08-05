@@ -151,28 +151,6 @@ function procesarConOpenCV(imagen) {
         mostrarResultados([resultado]);
     }
 }
-            
-            // Simulación de análisis
-            setTimeout(() => {
-                const resultado = simularAnalisis();
-                mostrarResultados([resultado]);
-                document.getElementById('status').innerHTML = '✅ Análisis completado';
-            }, 2000);
-        }
-
-        function demo() {
-            if (perfiles.length === 0) {
-                alert('⚠️ Carga los catálogos primero');
-                return;
-            }
-            
-            const demoDatos = [
-                {codigo: '651', descripcion: 'Umbral y Dintel', cantidad: 12, peso: 1.21, confianza: 0.89},
-                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', cantidad: 8, peso: 1.66, confianza: 0.92}
-            ];
-            
-            mostrarResultados(demoDatos);
-        }
 
         function simularAnalisis() {
             const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
