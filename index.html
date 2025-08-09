@@ -40,6 +40,7 @@
         </div>
     </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js"></script>
     <script>
         let perfiles = [];
         
@@ -68,6 +69,14 @@
             if (perfiles.length === 0) { alert('⚠️ Carga los catálogos primero'); return; }
             
             document.getElementById('status').innerHTML = '🔄 Analizando...';
+
+
+ // AGREGAR ESTAS LÍNEAS NUEVAS:
+    console.log('OpenCV disponible:', typeof cv !== 'undefined');
+    if (typeof cv !== 'undefined') {
+        document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!';
+    }
+
             setTimeout(() => {
                 const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
                 const resultado = {
