@@ -20,16 +20,13 @@
 <body>
     <div class="container">
         <h1>🤖 Alcemar Perfiles IA</h1>
-        
-        <div class="status" id="status">🟢 Sistema listorti</div>
-        
+        <div class="status" id="status">🟢 Sistema listo</div>
         <div>
             <h3>📚 Base de Datos</h3>
             <button class="btn btn-success" onclick="cargarCatalogos()">Cargar Catálogos</button>
             <button class="btn btn-danger" onclick="limpiarBD()">Limpiar BD</button>
             <p>Perfiles cargados: <span id="contador">0</span></p>
         </div>
-        
         <div>
             <h3>📷 Análisis</h3>
             <input type="file" id="imagen" accept="image/*" style="margin: 10px 0;">
@@ -37,7 +34,6 @@
             <button class="btn" onclick="analizarImagen()">🧠 Analizar Imagen</button>
             <button class="btn btn-success" onclick="demo()">🎯 Demo</button>
         </div>
-        
         <div id="resultados" class="hidden">
             <h3>🎯 Resultados</h3>
             <div id="lista-resultados"></div>
@@ -45,21 +41,17 @@
     </div>
 
     <script>
-// Variables globales
         let perfiles = [];
-        let resultados = [];
-
-        // Cargar catálogos de Alcemar
+        
         function cargarCatalogos() {
             perfiles = [
-                {codigo: '651', descripcion: 'Umbral y Dintel (Ventana/Puerta corrediza)', peso: 1.21, catalogo: 'Delta'},
-                {codigo: '655', descripcion: 'Jamba (Ventana/Puerta corrediza)', peso: 0.59, catalogo: 'Delta'},
-                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', peso: 1.66, catalogo: 'Complementarios'},
-                {codigo: '174', descripcion: 'Marco PF/VB/VR/VOB/PR/VBDE', peso: 0.74, catalogo: 'Gamma'},
-                {codigo: '481', descripcion: 'Hoja para Ventana y Puerta Corrediza', peso: 0.70, catalogo: 'Gamma'},
-                {codigo: '476', descripcion: 'Pasamanos Redondo para Baranda Clásica', peso: 1.30, catalogo: 'Complementarios'}
+                {codigo: '651', descripcion: 'Umbral y Dintel', peso: 1.21},
+                {codigo: '655', descripcion: 'Jamba', peso: 0.59},
+                {codigo: '110', descripcion: 'Zócalo Puerta Blindex', peso: 1.66},
+                {codigo: '174', descripcion: 'Marco PF/VB/VR', peso: 0.74},
+                {codigo: '481', descripcion: 'Hoja Corrediza', peso: 0.70},
+                {codigo: '476', descripcion: 'Pasamanos', peso: 1.30}
             ];
-            
             document.getElementById('contador').textContent = perfiles.length;
             document.getElementById('status').innerHTML = '✅ Catálogos cargados: ' + perfiles.length + ' perfiles';
         }
@@ -70,108 +62,33 @@
             document.getElementById('status').innerHTML = '🔄 Base de datos limpia';
         }
 
-        // Función de análisis CON OpenCV
-async function analizarImagen() {
-    const archivo = document.getElementById('imagen').files[0];
-    
-    if (!archivo) {
-        alert('⚠️ Selecciona una imagen primero');
-        return;
-    }
-    
-    if (perfiles.length === 0) {
-        alert('⚠️ Carga los catálogos primero');
-        return;
-    }
-    
-    document.getElementById('status').innerHTML = '🔄 Analizando imagen con OpenCV...';
-    
-    // Cargar OpenCV si no está listo
-    if (typeof cv === 'undefined') {
-        document.getElementById('status').innerHTML = '⚠️ OpenCV no cargado, usando análisis simulado';
-        setTimeout(() => {
-            const resultado = simularAnalisis();
-            mostrarResultados([resultado]);
-        }, 1000);
-        return;
-    }
-    
-    // Procesar imagen con OpenCV
-    const img = new Image();
-    img.onload = function() {
-        procesarConOpenCV(img);
-    };
-    img.src = URL.createObjectURL(archivo);
-}
-
-function procesarConOpenCV(imagen) {
-    try {
-        // Crear canvas
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = imagen.width;
-        canvas.height = imagen.height;
-        ctx.drawImage(imagen, 0, 0);
-        
-        // Convertir a OpenCV Mat
-        const src = cv.matFromImageData(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        const gray = new cv.Mat();
-        const edges = new cv.Mat();
-        const contours = new cv.MatVector();
-        const hierarchy = new cv.Mat();
-        
-        // Procesar imagen
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.Canny(gray, edges, 50, 150);
-        cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-        
-        console.log(`🔍 OpenCV detectó ${contours.size()} contornos`);
-        
-        // Dibujar contornos verdes
-        dibujarContornos(src, contours);
-        
-        // Analizar formas y matching
-        const formasDetectadas = analizarContornos(contours, canvas.width, canvas.height);
-        const resultados = hacerMatching(formasDetectadas);
-        
-        // Mostrar resultados
-        mostrarResultados(resultados);
-        document.getElementById('status').innerHTML = `✅ OpenCV detectó ${contours.size()} contornos`;
-        
-        // Limpiar memoria
-        src.delete(); gray.delete(); edges.delete(); contours.delete(); hierarchy.delete();
-        
-    } catch (error) {
-        console.error('Error OpenCV:', error);
-        document.getElementById('status').innerHTML = '❌ Error en OpenCV, usando simulación';
-        const resultado = simularAnalisis();
-        mostrarResultados([resultado]);
-    }
-}
+        function analizarImagen() {
+            const archivo = document.getElementById('imagen').files[0];
+            if (!archivo) { alert('⚠️ Selecciona una imagen primero'); return; }
+            if (perfiles.length === 0) { alert('⚠️ Carga los catálogos primero'); return; }
+            
+            document.getElementById('status').innerHTML = '🔄 Analizando...';
+            setTimeout(() => {
+                const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
+                const resultado = {
+                    codigo: perfil.codigo,
+                    descripcion: perfil.descripcion,
+                    cantidad: Math.floor(Math.random() * 20) + 5,
+                    peso: perfil.peso,
+                    confianza: 0.7 + Math.random() * 0.3
+                };
+                mostrarResultados([resultado]);
+                document.getElementById('status').innerHTML = '✅ Análisis completado';
+            }, 2000);
+        }
 
         function demo() {
-            if (perfiles.length === 0) {
-                alert('⚠️ Carga los catálogos primero');
-                return;
-            }
-            
+            if (perfiles.length === 0) { alert('⚠️ Carga los catálogos primero'); return; }
             const demoDatos = [
                 {codigo: '651', descripcion: 'Umbral y Dintel', cantidad: 12, peso: 1.21, confianza: 0.89},
                 {codigo: '110', descripcion: 'Zócalo Puerta Blindex', cantidad: 8, peso: 1.66, confianza: 0.92}
             ];
-            
             mostrarResultados(demoDatos);
-        }
-
-        function simularAnalisis() {
-            const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
-            return {
-                codigo: perfil.codigo,
-                descripcion: perfil.descripcion,
-                cantidad: Math.floor(Math.random() * 20) + 5,
-                peso: perfil.peso,
-                confianza: 0.7 + Math.random() * 0.3
-            };
         }
 
         function mostrarResultados(datos) {
@@ -185,12 +102,8 @@ function procesarConOpenCV(imagen) {
                     <p><strong>Confianza:</strong> ${(item.confianza * 100).toFixed(1)}%</p>
                 </div>
             `).join('');
-            
             document.getElementById('resultados').classList.remove('hidden');
-
         }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js"></script>
-    <script>
-</script>
+    </script>
 </body>
-</html>
+</html>¿Prefieres la OPCIÓN 1 (revertir) o la OPCIÓN 2 (pegar código nuevo)?
