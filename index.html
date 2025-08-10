@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+//   onload="onOpenCVReady()
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js" async onload="onOpenCVReady()"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alcemar Perfiles IA</title>
@@ -40,7 +43,7 @@
         </div>
     </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js"></script>
+ // <script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.8.0/opencv.js"></script>
     <script>
         let perfiles = [];
         
@@ -71,11 +74,42 @@
             document.getElementById('status').innerHTML = '🔄 Analizando...';
 
 
-// AGREGAR ESTAS LÍNEAS NUEVAS:
- console.log('OpenCV disponible:', typeof cv !== 'undefined'); 
-// Función para verificar cuando OpenCV esté completamente listo 
-function waitForOpenCV(callback) { if (typeof cv !== 'undefined' && cv.Mat) { callback(); } else { setTimeout(() => waitForOpenCV(callback), 100); } }
+<script>
+// Variable global para controlar si OpenCV está listo
+let openCVReady = false;
 
+// Función que se ejecuta cuando OpenCV se carga completamente
+function onOpenCVReady() {
+    cv['onRuntimeInitialized'] = () => {
+        console.log('OpenCV completamente inicializado');
+        openCVReady = true;
+        document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!';
+    };
+}
+
+// Función para verificar OpenCV antes de usar
+function checkOpenCV() {
+    if (openCVReady && typeof cv !== 'undefined') {
+        console.log('OpenCV está listo para usar');
+        return true;
+    } else {
+        console.log('OpenCV aún no está listo');
+        document.getElementById('status').innerHTML = '⚠️ Esperando OpenCV...';
+        return false;
+    }
+}
+
+// Tu función setTimeout original (línea 84+)
+setTimeout(() => {
+    // Verificar OpenCV antes de procesar
+    if (!checkOpenCV()) {
+        console.log('OpenCV no disponible, procesando sin visión computacional');
+    }
+    
+    const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
+    const resultado = {
+        codigo: perfil.codigo,
+        descripcion: perfil.descripcion,
  // Verificar OpenCV cuando esté listo 
 if (typeof cv !== 'undefined') { waitForOpenCV(() => { document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!'; console.log('OpenCV completamente inicializado'); }); } else { document.getElementById('status').innerHTML = '⚠️ OpenCV no está disponible'; }
 
