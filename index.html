@@ -71,11 +71,9 @@
             document.getElementById('status').innerHTML = '🔄 Analizando...';
 
 
- // AGREGAR ESTAS LÍNEAS NUEVAS:
-    console.log('OpenCV disponible:', typeof cv !== 'undefined');
-    if (typeof cv !== 'undefined') {
-        document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!';
-    }
+// AGREGAR ESTAS LÍNEAS NUEVAS: console.log('OpenCV disponible:', typeof cv !== 'undefined'); // Función para verificar cuando OpenCV esté completamente listo function waitForOpenCV(callback) { if (typeof cv !== 'undefined' && cv.Mat) { callback(); } else { setTimeout(() => waitForOpenCV(callback), 100); } } // Verificar OpenCV cuando esté listo if (typeof cv !== 'undefined') { waitForOpenCV(() => { document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!'; console.log('OpenCV completamente inicializado'); }); } else { document.getElementById('status').innerHTML = '⚠️ OpenCV no está disponible'; }
+
+
 
             setTimeout(() => {
                 const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
