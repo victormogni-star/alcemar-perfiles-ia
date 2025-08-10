@@ -66,8 +66,7 @@ function checkOpenCV() {
         return false;
     }
 }
-
-        
+    
         let perfiles = [];
         
         function cargarCatalogos() {
@@ -96,7 +95,6 @@ function checkOpenCV() {
             
             document.getElementById('status').innerHTML = '🔄 Analizando...';
 
-
 <script>
 
 // Tu función setTimeout original (línea 84+)
@@ -115,18 +113,18 @@ if (typeof cv !== 'undefined') { waitForOpenCV(() => { document.getElementById('
 
 
 
-            setTimeout(() => {
-                const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
-                const resultado = {
-                    codigo: perfil.codigo,
-                    descripcion: perfil.descripcion,
-                    cantidad: Math.floor(Math.random() * 20) + 5,
-                    peso: perfil.peso,
-                    confianza: 0.7 + Math.random() * 0.3
-                };
-                mostrarResultados([resultado]);
-                document.getElementById('status').innerHTML = '✅ Análisis completado';
-            }, 2000);
+//            setTimeout(() => {
+//                const perfil = perfiles[Math.floor(Math.random() * perfiles.length)];
+//                const resultado = {
+//                     codigo: perfil.codigo,
+//                     descripcion: perfil.descripcion,
+//                     cantidad: Math.floor(Math.random() * 20) + 5,
+//                     peso: perfil.peso,
+//                     confianza: 0.7 + Math.random() * 0.3
+//                 };
+//                 mostrarResultados([resultado]);
+//                 document.getElementById('status').innerHTML = '✅ Análisis completado';
+//             }, 2000);
         }
 
         function demo() {
