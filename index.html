@@ -42,8 +42,32 @@
         </div>
     </div>
 
-
     <script>
+// Variable global para controlar si OpenCV está listo
+let openCVReady = false;
+
+// Función que se ejecuta cuando OpenCV se carga completamente
+function onOpenCVReady() {
+    cv['onRuntimeInitialized'] = () => {
+        console.log('OpenCV completamente inicializado');
+        openCVReady = true;
+        document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!';
+    };
+}
+
+// Función para verificar OpenCV antes de usar
+function checkOpenCV() {
+    if (openCVReady && typeof cv !== 'undefined') {
+        console.log('OpenCV está listo para usar');
+        return true;
+    } else {
+        console.log('OpenCV aún no está listo');
+        document.getElementById('status').innerHTML = '⚠️ Esperando OpenCV...';
+        return false;
+    }
+}
+
+        
         let perfiles = [];
         
         function cargarCatalogos() {
@@ -74,29 +98,6 @@
 
 
 <script>
-// Variable global para controlar si OpenCV está listo
-let openCVReady = false;
-
-// Función que se ejecuta cuando OpenCV se carga completamente
-function onOpenCVReady() {
-    cv['onRuntimeInitialized'] = () => {
-        console.log('OpenCV completamente inicializado');
-        openCVReady = true;
-        document.getElementById('status').innerHTML = '✅ OpenCV cargado correctamente!';
-    };
-}
-
-// Función para verificar OpenCV antes de usar
-function checkOpenCV() {
-    if (openCVReady && typeof cv !== 'undefined') {
-        console.log('OpenCV está listo para usar');
-        return true;
-    } else {
-        console.log('OpenCV aún no está listo');
-        document.getElementById('status').innerHTML = '⚠️ Esperando OpenCV...';
-        return false;
-    }
-}
 
 // Tu función setTimeout original (línea 84+)
 setTimeout(() => {
